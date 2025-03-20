@@ -16,7 +16,5 @@ def bookanappointment():
     else:
         return jsonify({"status": "error", "message": "No form data received"}), 400
 
-
-
 if __name__ == '__main__':
     app.run(debug=True)
