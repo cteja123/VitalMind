@@ -1,0 +1,37 @@
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+.form-format {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between inputs */
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.hidden_field {
+    display: none;
+}
+
+.danger_color {
+    color: red;
+}
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; /* Space between fields */
+}
+.form-group label {
+    width: 150px; /* Adjust width as needed */
+    font-weight: bold;
+}
+.form-group input, 
+.form-group select {
+    flex: 1;
+    padding: 5px;
+}

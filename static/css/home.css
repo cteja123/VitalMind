@@ -1,0 +1,58 @@
+
+.container_center {
+    height: 70vh;
+}
+
+.get_started {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.get_started:hover {
+    background-color: #0056b3;
+}
+
+.size_distribution {
+    width: 184px;
+    height: 200px;
+    object-fit: cover; 
+}
+
+.vital_logo {
+    width: 409px;
+    height: 200px;
+    object-fit: cover; 
+}
+
+.collaboration {
+    text-align: center;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+/* Adjust for smaller screens */
+@media (max-width: 768px) {
+    .collaboration {
+        font-size: 4vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .collaboration {
+        font-size: 6vw;
+    }
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    gap: 70px;
+    font-weight: bold;
+}

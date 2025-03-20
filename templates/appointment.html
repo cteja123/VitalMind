@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/appointment.css')}}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <title>Book an Appoinment</title>
+    <!-- <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-format {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between inputs */
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .hidden_field {
+            display: none;
+        }
+
+        .danger_color {
+            color: red;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px; /* Space between fields */
+        }
+        .form-group label {
+            width: 150px; /* Adjust width as needed */
+            font-weight: bold;
+        }
+        .form-group input, 
+        .form-group select {
+            flex: 1;
+            padding: 5px;
+        }
+    </style> -->
+</head>
+<body>
+    <div class="container">
+        <button id="homepage" onclick="returnhomepage()">Back</button>
+        <form id="appointment" class="form-format">
+            <h5>Book an appointment</h5>
+            <div class="form-group">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name">
+            </div>
+            <span class="hidden_field danger_color" id="error_first_name">Please provide first name <span class="danger_color">*</span></span>
+            
+            <div class="form-group">
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name">
+            </div>
+            
+            <div class="form-group">
+                <label for="company">Company:</label>
+                <input type="text" id="company" name="Company">
+            </div>
+            <span class="hidden_field danger_color" id="error_company">Please provide Company <span class="danger_color">*</span></span>
+            
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <input type="email" id="email" name="email">
+            </div>
+            <span class="hidden_field danger_color" id="error_email">Please provide proper Email <span class="danger_color">*</span></span>
+
+            <div class="form-group">
+                <label for="Country">Country</label>
+                <select name="country[]" id="country"></select>
+            </div>
+            <span class="hidden_field danger_color" id="error_country">Please provide Country <span class="danger_color">*</span></span>
+
+            
+            <div class="form-group">
+                <label for="City">City</label>
+                <select name="city[]" id="city">
+                    <option value="">select</option>
+                </select>
+            </div>
+            <span class="hidden_field danger_color" id="error_city">Please provide City <span class="danger_color">*</span></span>
+
+            <div class="form-group">
+                <label for="phone_number">Phone number</label>
+                <input type="tel" id="phone_number" pattern="[0-9]+" inputmode="numeric" maxlength="10" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+            </div>
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+<script type="text/javascript">
+    countries();
+    cities();
+    async function countries(){
+        const countries = ['India','Australia','Srilanka','United Kingdom','United States'];
+        var country_options = "<option value=''>select</option>";
+        countries.forEach(country => {
+            country_options += "<option>"+country+"</option>";
+        });
+        document.getElementById("country").innerHTML =country_options;
+    }
+
+    async function cities()
+    {
+        const cities = ['Hyderabad','Delhi','Brisbane','Sydney','ceylon','London','Hampshire','Texas','California'];
+        var city_options = "<option value=''>select</option>";
+        cities.forEach(city => {
+            city_options += "<option>"+city+"</option>";
+        });
+        document.getElementById("city").innerHTML = city_options;
+    }
+
+    function returnhomepage()
+    {
+        window.location.replace("/");
+    }
+    
+
+    document.getElementById("appointment").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevents form from submitting and refreshing page
+        const first_name = document.getElementById("first_name").value;
+        const company = document.getElementById("company").value;
+        const email = document.getElementById("email").value;
+        const country = document.getElementById("country").value;
+        const city = document.getElementById("city").value;
+
+        if(first_name === "")
+        {
+            document.getElementById("error_first_name").classList.remove("hidden_field");
+        }
+        if(company === "")
+        {
+            document.getElementById("error_company").classList.remove("hidden_field");
+
+        }
+        if(email === "")
+        {
+            document.getElementById("error_email").classList.remove("hidden_field");
+
+        }
+        if(country === "")
+        {
+            document.getElementById("error_country").classList.remove("hidden_field");
+
+        }
+        if(city === "")
+        {
+            document.getElementById("error_city").classList.remove("hidden_field");
+
+        }
+
+        if(first_name!="" || company!="" || email!="" || country!="" || city!="")
+        {
+            let formData = new FormData(this);
+            console.log(formData);
+            fetch("/bookanappointment", {  // Submits to Flask backend
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json()) 
+            .then(data => {
+                if (data.status === "success") {
+                    console.log(data.output);
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: data.message
+                    }).then(()=>{
+                        document.getElementById("appointment").reset();
+                        window.location.replace("/");
+                });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: data.message
+                    });
+                }
+            })
+            Swal.fire({
+                title: "Success!",
+                text: "Your form has been submitted.",
+                icon: "success",
+                confirmButtonText: "OK"
+            });
+        }
+        
+    });
+</script>
+</html>
