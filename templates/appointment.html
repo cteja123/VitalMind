@@ -3,86 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Link to external CSS file -->
     <link rel="stylesheet" href="{{url_for('static', filename='css/appointment.css')}}">
+    
+    <!-- SweetAlert2 for user-friendly alerts -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <title>Book an Appoinment</title>
-    <!-- <style>
-        .container {
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-        }
-        .form-format {
-            display: flex;
-            flex-direction: column;
-            gap: 10px; /* Space between inputs */
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        .hidden_field {
-            display: none;
-        }
-
-        .danger_color {
-            color: red;
-        }
-        .form-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px; /* Space between fields */
-        }
-        .form-group label {
-            width: 150px; /* Adjust width as needed */
-            font-weight: bold;
-        }
-        .form-group input, 
-        .form-group select {
-            flex: 1;
-            padding: 5px;
-        }
-    </style> -->
+    
+    <title>Book an Appointment</title>
 </head>
 <body>
     <div class="container">
+        <!-- Back button to return to homepage -->
         <button id="homepage" onclick="returnhomepage()">Back</button>
+        
+        <!-- Appointment Booking Form -->
         <form id="appointment" class="form-format">
             <h5>Book an appointment</h5>
+            
+            <!-- First Name Field -->
             <div class="form-group">
                 <label for="first_name">First Name:</label>
                 <input type="text" id="first_name" name="first_name">
             </div>
             <span class="hidden_field danger_color" id="error_first_name">Please provide first name <span class="danger_color">*</span></span>
             
+            <!-- Last Name Field -->
             <div class="form-group">
                 <label for="last_name">Last Name:</label>
                 <input type="text" id="last_name" name="last_name">
             </div>
             
+            <!-- Company Field -->
             <div class="form-group">
                 <label for="company">Company:</label>
                 <input type="text" id="company" name="Company">
             </div>
             <span class="hidden_field danger_color" id="error_company">Please provide Company <span class="danger_color">*</span></span>
             
+            <!-- Email Field -->
             <div class="form-group">
                 <label for="Email">Email</label>
                 <input type="email" id="email" name="email">
             </div>
             <span class="hidden_field danger_color" id="error_email">Please provide proper Email <span class="danger_color">*</span></span>
 
+            <!-- Country Dropdown -->
             <div class="form-group">
                 <label for="Country">Country</label>
                 <select name="country[]" id="country"></select>
             </div>
             <span class="hidden_field danger_color" id="error_country">Please provide Country <span class="danger_color">*</span></span>
 
-            
+            <!-- City Dropdown -->
             <div class="form-group">
                 <label for="City">City</label>
                 <select name="city[]" id="city">
@@ -91,18 +70,19 @@
             </div>
             <span class="hidden_field danger_color" id="error_city">Please provide City <span class="danger_color">*</span></span>
 
+            <!-- Phone Number Field -->
             <div class="form-group">
                 <label for="phone_number">Phone number</label>
                 <input type="tel" id="phone_number" pattern="[0-9]+" inputmode="numeric" maxlength="10" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </div>
 
+            <!-- Submit Button -->
             <input type="submit" value="Submit">
         </form>
     </div>
 </body>
 <script type="text/javascript">
-    countries();
-    cities();
+    // Populate Country Dropdown
     async function countries(){
         const countries = ['India','Australia','Srilanka','United Kingdom','United States'];
         var country_options = "<option value=''>select</option>";
@@ -112,6 +92,7 @@
         document.getElementById("country").innerHTML =country_options;
     }
 
+    // Populate City Dropdown
     async function cities()
     {
         const cities = ['Hyderabad','Delhi','Brisbane','Sydney','ceylon','London','Hampshire','Texas','California'];
@@ -122,12 +103,17 @@
         document.getElementById("city").innerHTML = city_options;
     }
 
+    // Call functions to populate dropdowns
+    countries();
+    cities();
+
+    // Redirect back to homepage
     function returnhomepage()
     {
         window.location.replace("/");
     }
     
-
+    // Form Submission Handling
     document.getElementById("appointment").addEventListener("submit", function(event) {
         event.preventDefault(); // Prevents form from submitting and refreshing page
         const first_name = document.getElementById("first_name").value;
@@ -136,6 +122,7 @@
         const country = document.getElementById("country").value;
         const city = document.getElementById("city").value;
 
+        // Validate fields and show error messages if empty
         if(first_name === "")
         {
             document.getElementById("error_first_name").classList.remove("hidden_field");
@@ -161,11 +148,12 @@
 
         }
 
+        // If all required fields are filled, submit form via fetch API
         if(first_name!="" || company!="" || email!="" || country!="" || city!="")
         {
             let formData = new FormData(this);
-            console.log(formData);
-            fetch("/bookanappointment", {  // Submits to Flask backend
+            // Here we can print the form data using console.log(formData);
+            fetch("/bookanappointment", {  // Sends data to Flask backend
                 method: "POST",
                 body: formData
             })
