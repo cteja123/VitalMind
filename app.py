@@ -1,9 +1,23 @@
 from flask import Flask, render_template, url_for, jsonify, request
+from flask_mysqldb import MySQL
+
+# import mysql.connector
 app = Flask(__name__,static_folder="static")
+
+app.config['MYSQL_HOST'] = "localhost"
+app.config['MYSQL_USER'] = "root"
+app.config['MYSQL_PASSWORD'] = ""
+app.config['MYSQL_DB'] = "test"
+
+mysql = MySQL(app)
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    cur = mysql.connection.cursor()
+    cur.execute("select * from countries")
+    fetch_data = cur.fetchall()
+    cur.close()
+    return render_template("home.html",data = fetch_data)
 
 @app.route("/appointment")
 def appointment():
