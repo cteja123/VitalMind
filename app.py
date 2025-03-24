@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, jsonify, request
 from flask_mysqldb import MySQL
-
+import MySQLdb.cursors
 # import mysql.connector
 app = Flask(__name__,static_folder="static")
 
@@ -29,6 +29,15 @@ def bookanappointment():
         return jsonify({"status": "success", "message": "Appointment booked successfully!","output":request.form}),200
     else:
         return jsonify({"status": "error", "message": "No form data received"}), 400
+
+@app.route("/getcountries", methods=["GET", "POST"])
+def getcountries():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute("select * from countries")
+    fetch_data = cur.fetchall()
+    cur.close()
+    return jsonify({"status": "success", "message": "Appointment booked successfully!","countries":fetch_data}),200
+
 
 if __name__ == '__main__':
     app.run(debug=True)

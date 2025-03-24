@@ -83,12 +83,12 @@
 </body>
 <script type="text/javascript">
     // Populate Country Dropdown
-    async function countries(){
-        const countries = ['India','Australia','Srilanka','United Kingdom','United States'];
+    async function countries(countries){
+        // const countries = ['India','Australia','Srilanka','United Kingdom','United States'];
         var country_options = "<option value=''>select</option>";
-        countries.forEach(country => {
-            country_options += "<option>"+country+"</option>";
-        });
+        for (let i = 0; i < countries.length; i++) {
+            country_options += `<option value="${countries[i].id}">${countries[i].country_name}</option>`;
+        }
         document.getElementById("country").innerHTML =country_options;
     }
 
@@ -104,7 +104,6 @@
     }
 
     // Call functions to populate dropdowns
-    countries();
     cities();
 
     // Redirect back to homepage
@@ -186,5 +185,15 @@
         }
         
     });
+    
+    fetch("/getcountries", {  // Sends data to Flask backend
+                method: "GET",
+            })
+            .then(response => response.json()) 
+            .then(data => {
+                if (data.status === "success") {
+                    // console.log(data.output);
+                    countries(data.countries);
+                }})
 </script>
 </html>
